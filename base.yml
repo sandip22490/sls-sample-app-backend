@@ -1,0 +1,42 @@
+# All the resources wil be created with below prefix
+prefix: sampleapp
+services:
+  base: base
+  user: user
+  
+# CORS Config for APIM
+cors:
+  allowCredentials: false
+  allowedOrigins:
+    - "*"
+  allowedMethods:
+    - GET
+    - POST
+    - PUT
+    - DELETE
+    - PATCH
+  allowedHeaders:
+    - "*"
+  exposeHeaders:
+    - "*"
+jwtValidate:
+  headerName: Authorization
+  failedStatusCode: 401
+  failedErrorMessage: access is restricted
+  audiences:
+    - ${env:B2C_APPLICATION_ID}
+  issuers: 
+    - https://${env:B2C_TENANT_NAME}.b2clogin.com/${env:B2C_OBJECT_ID}/v2.0/
+  openId: 
+    metadataUrl: https://${env:B2C_TENANT_NAME}.b2clogin.com/${env:B2C_TENANT_NAME}.onmicrosoft.com/v2.0/.well-known/openid-configuration?p=${env:B2C_SIGNIN_POLICY}
+  scheme: Bearer
+  # requiredClaims: 
+  # tokenValue:
+  # queryParamName:
+  # requireExpirationTime:
+  # scheme: 
+  # requireSignedTokens: 
+  # clockSkew:
+  # outputTokenVariableName: 
+  # signingKeys: 
+  # decryptionKeys: 

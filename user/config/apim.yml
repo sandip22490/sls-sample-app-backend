@@ -1,0 +1,15 @@
+name: ${file(../base/config/apim.yml):name}
+apis: 
+  - name: ${file(../base.yml):services.user}-api
+    subscriptionRequired: false
+    displayName: ${file(../base.yml):services.user}-api
+    description: SampleApp user API
+    protocols:
+      - https
+    path: ${file(../base.yml):services.user}
+    authorization: none
+backends:
+  - name: ${self:provider.serviceName}-backend
+    url: ${self:provider.serviceName}
+cors: ${file(../base.yml):cors}
+jwtValidate: ${file(../base.yml):jwtValidate}

@@ -1,0 +1,61 @@
+service: user
+
+frameworkVersion: ">=1.0.0 <2.0.0"
+
+plugins:
+  - serverless-webpack
+  - serverless-azure-functions
+  - serverless-dotenv-plugin
+  - serverless-scriptable-plugin
+
+provider:
+  name: azure
+  serviceName: ${file(../base.yml):services.user}
+  region: ${env:REGION}
+  runtime: nodejs12
+  prefix: ${file(../base.yml):prefix}
+  stage: ${env:STAGE}
+  resourceGroup: ${self:provider.stage}-${self:provider.prefix}-rg
+  deploymentName: ${self:provider.stage}-${self:provider.prefix}-${self:provider.serviceName}-d
+  deployment:
+    external: false
+    container: ${self:provider.serviceName}-fna
+    rollback: true
+  appServicePlan:
+    name: ${file(../base/serverless.yml):provider.appServicePlan.name}
+  functionApp:
+    name: ${self:provider.stage}-${self:provider.prefix}-${self:provider.serviceName}-app
+  storageAccount:
+    name: ${file(../base/serverless.yml):provider.storageAccount.name}
+  appInsights:
+    name: ${file(../base/serverless.yml):provider.appInsights.name}
+  keyVault:
+    name: ${self:provider.stage}-${self:provider.prefix}-user-kv
+    resourceGroup: ${self:provider.resourceGroup}
+  apim: ${file(./config/apim.yml)}
+  armTemplate: ${file(./config/arm-template.yml)}
+
+custom:
+  dotenv:
+    path: ../.env
+    include:
+      - 
+  webpack:
+    webpackConfig: ../webpack.config.js
+  appSecrets:
+    - kvName: ${self:provider.serviceName}-conn-str
+      appName: CONN_STR
+      value: ${env:CONN_STR}
+  scriptHooks:
+    before:deploy:deploy: ./hooks/beforeDeploy.js
+    after:deploy:deploy: ./hooks/afterDeploy.js
+
+# you can add packaging information here
+package:
+  # include:
+  #   -
+  exclude:
+    - local.settings.json
+    - .vscode/**
+
+functions: ${file(./config/functions.yml)}
