@@ -66,7 +66,7 @@ Follow below steps to make code changes in `serverless-azure-function` npm modul
 - replace `Line No: 285` with below code -
 
   ```
-  var localCommand = path_1.join(serverless.config.servicePath.replace(serverless.service.service, ''), "node_modules", ".bin", command);
+  var localCommand = path_1.join(serverless.config.servicePath.replace(`\\${serverless.service.service}`, '\\'), "node_modules", ".bin", command);
   ```
 Serverless framework comes with necessary tools to provide you ability to test locally before you deploy your code into Azure. This will speed up development process as you do not have to deploy code everytime you want to test your functions. Below stpes will allow you to run your function locally
 
