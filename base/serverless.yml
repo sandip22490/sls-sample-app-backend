@@ -1,0 +1,59 @@
+service: base
+
+frameworkVersion: ">=1.0.0 <2.0.0"
+
+plugins:
+  - serverless-webpack
+  - serverless-azure-functions
+  - serverless-dotenv-plugin
+  - serverless-scriptable-plugin
+
+provider:
+  name: azure
+  serviceName: ${file(../base.yml):services.base}
+  region: ${env:REGION}
+  runtime: nodejs12
+  prefix: ${file(../base.yml):prefix}
+  stage: ${env:STAGE}
+  resourceGroup: ${self:provider.stage}-${self:provider.prefix}-rg
+  deploymentName: ${self:provider.stage}-${self:provider.prefix}-${self:provider.serviceName}-d
+  deployment:
+    external: false
+    container: ${self:provider.serviceName}-fna
+    rollback: true
+  appServicePlan:
+    name: ${self:provider.stage}-${self:provider.prefix}-node-asp
+  functionApp:
+    name: ${self:provider.stage}-${self:provider.prefix}-${self:provider.serviceName}-app
+  storageAccount:
+    name: ${self:provider.stage}${self:provider.prefix}nodeaspsa
+  b2cStorageAccount:
+    name: ${self:provider.stage}${self:provider.prefix}b2csa
+    containerName: b2c-custom-ui 
+  appInsights:
+    name: ${self:provider.stage}-${self:provider.prefix}-node-ai
+  keyVault:
+    name: ${self:provider.stage}-${self:provider.prefix}-${self:provider.serviceName}-kv
+    resourceGroup: ${self:provider.resourceGroup}
+  armTemplate: ${file(./config/arm-template.yml)}
+
+custom:
+  dotenv:
+    path: ../.env
+    include:
+      - 
+  webpack:
+    webpackConfig: ../webpack.config.js
+  appSecrets:
+    - kvName: ${self:service}-conn-str
+      appName: CONN_STR
+      value: ${env:CONN_STR} 
+  scriptHooks:
+    before:deploy:deploy: ./hooks/beforeDeploy.js
+    after:deploy:deploy: ./hooks/afterDeploy.js
+package:
+  exclude:
+    - local.settings.json
+    - .vscode/**
+
+functions: ${file(./config/functions.yml)}

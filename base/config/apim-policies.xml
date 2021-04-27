@@ -1,0 +1,13 @@
+<policies>
+  <inbound>
+  </inbound>
+  <backend>
+    <forward-request />
+  </backend>
+  <outbound>
+    <set-header name="content-type" exists-action="override">
+      <value>application/json</value>
+    </set-header>
+  </outbound>
+  <on-error />
+</policies>

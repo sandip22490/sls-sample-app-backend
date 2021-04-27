@@ -1,0 +1,16 @@
+getuser:
+  handler: src/handlers/get.default
+  apim:
+    api: ${self:provider.serviceName}-api
+    backend: ${self:provider.serviceName}-backend
+    operations:
+      - method: GET
+        urlTemplate: /
+        displayName: get-user
+  events:
+    - http: true
+      name: req
+      methods:
+        - GET
+      authLevel: function
+      route: user

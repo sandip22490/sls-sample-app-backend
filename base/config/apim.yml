@@ -1,0 +1,3 @@
+name: ${self:provider.stage}-${self:provider.prefix}-apim
+publisherEmail: dev@sampleorg.com
+publisherName: sampleorg.com

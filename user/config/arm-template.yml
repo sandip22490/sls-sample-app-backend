@@ -1,0 +1,27 @@
+file: ./config/azuredeploy.json
+parameters:
+  appServicePlanName:
+    value: ${self:provider.appServicePlan.name}
+  functionAppName:
+    value: ${self:provider.functionApp.name}
+  storageAccountName:
+    value: ${self:provider.storageAccount.name}
+  appInsightName:
+    value: ${self:provider.appInsights.name}
+  keyVaultName:
+    value: ${self:provider.keyVault.name}
+  keyVaultSku:
+    value: Standard
+  spObjectId: 
+    value: true # defines whether to include access policy for service principal or not
+  userObjectId:
+    value: true # defines whether to include access policy for azure ad user
+  objectIds:
+    value:
+      - 
+  secretsPermissions:
+    value:
+      - get
+      - list
+      - set
+      - delete

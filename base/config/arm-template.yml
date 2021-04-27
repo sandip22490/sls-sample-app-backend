@@ -1,0 +1,39 @@
+file: ./config/azuredeploy.json
+parameters:
+  appServicePlanName:
+    value: ${self:provider.appServicePlan.name}
+  functionAppName:
+    value: ${self:provider.functionApp.name}
+  storageAccountName:
+    value: ${self:provider.storageAccount.name}
+  b2cStorageAccount:
+    value: ${self:provider.b2cStorageAccount}
+  appInsightName:
+    value: ${self:provider.appInsights.name}
+  apiManagementName:
+    value: ${file(./config/apim.yml):name}
+  apimPublisherEmail:
+    value: ${file(./config/apim.yml):publisherEmail}
+  apimPublisherName:
+    value: ${file(./config/apim.yml):publisherName}
+  keyVaultName:
+    value: ${self:provider.keyVault.name}
+  keyVaultSku:
+    value: Standard
+  apimPolicies:
+    value: ${file(./config/apim-policies.xml)}
+  # ObjectIds of service principal & azure ad user to allow access to key vault
+  # Values will be injected by before:deploy:deploy hook
+  spObjectId: 
+    value: true # defines whether to include access policy for service principal or not
+  userObjectId:
+    value: true # defines whether to include access policy for azure ad user
+  objectIds:
+    value:
+      - 
+  secretsPermissions:
+    value:
+      - get
+      - list
+      - set
+      - delete

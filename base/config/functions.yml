@@ -1,0 +1,9 @@
+helloWorld:
+  handler: src/handlers/helloWorld.default
+  events:
+    - http: true
+      name: req
+      methods:
+        - GET
+      authLevel: function
+      route: hello-world
